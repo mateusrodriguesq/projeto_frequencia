@@ -15,7 +15,7 @@ def design_login():
     """Define o layout da interface de login."""
     col1, col2 = st.columns(2)
     with col1:
-        st.sidebar.image("data/dema.jpg", width=50)
+        st.sidebar.image("data/dema.jpg", width=150)
     with col2:
         st.sidebar.header('📊 Frequência do Momento Áureo')
     st.sidebar.markdown("---")
