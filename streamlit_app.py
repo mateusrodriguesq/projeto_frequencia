@@ -16,7 +16,7 @@ def design_login():
     """Define o layout da interface de login."""
     col1, col2 = st.columns(2)
     with col1:
-        st.sidebar.image("data/dema.jpg", width=125)
+        st.sidebar.image("data/dema.jpg", width=100)
     with col2:
         st.sidebar.header('📊 Frequência do Momento Áureo')
     st.sidebar.markdown("---")
@@ -415,7 +415,7 @@ def analise_dados():
 def login():
     design_login()
     st.sidebar.title('Funções do App')
-    import_warning()
+
 
     option = st.sidebar.selectbox('Selecione uma opção:',
                                   ['Selecione', 'Lançar frequência', 'Análise de dados de frequência'])
@@ -427,6 +427,7 @@ def login():
     elif option == 'Análise de dados de frequência':
         analise_dados()
 
+    import_warning()
 
 
 login()
