@@ -5,9 +5,18 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import calendar
+from pathlib import Path
 
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 
+# Configurar diretórios
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = os.path.join(BASE_DIR, 'data')
+UPLOAD_DIR = os.path.join(DATA_DIR, 'capas')
+
+# Criar diretórios necessários
+os.makedirs(DATA_DIR, exist_ok=True)
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @st.cache_data(ttl=300)  # Cache por 5 minutos
 def carregar_dados_frequencia():
@@ -16,7 +25,7 @@ def carregar_dados_frequencia():
     """
     try:
         # Usar pandas para ler o arquivo xlsx
-        df = pd.read_excel('data/lista_frequencia_ma.xlsx', engine='openpyxl')
+        df = pd.read_excel(os.path.join(DATA_DIR, 'lista_frequencia_ma.xlsx'), engine='openpyxl')
         
         if df.empty:
             print("Aviso: Nenhum dado encontrado no arquivo de frequência")
@@ -33,7 +42,7 @@ def carregar_participantes():
     Carrega a lista de participantes usando Pandas.
     """
     try:
-        return pd.read_excel('data/participantes_momentos.xlsx')
+        return pd.read_excel(os.path.join(DATA_DIR, 'participantes_momentos.xlsx'))
     except Exception as e:
         print(f"Erro ao carregar lista de participantes: {str(e)}")
         return pd.DataFrame()
@@ -45,7 +54,7 @@ def carregar_segundas_feiras():
     """
     try:
         # Carregar o arquivo Excel
-        df = pd.read_excel('data/segundas_feiras.xlsx')
+        df = pd.read_excel(os.path.join(DATA_DIR, 'segundas_feiras.xlsx'))
         
         # Converter a coluna de datas para datetime
         df['Datas'] = pd.to_datetime(df['Datas'], format='%d/%m/%y')
@@ -86,7 +95,7 @@ def salvar_frequencia(data_registro, momento, df_freq):
         df_final = pd.concat([df_atual, df_novos])
         
         # Salvar de volta para Excel
-        df_final.to_excel('data/lista_frequencia_ma.xlsx', sheet_name='2025', index=False)
+        df_final.to_excel(os.path.join(DATA_DIR, 'lista_frequencia_ma.xlsx'), sheet_name='2025', index=False)
         
         # Limpar cache para forçar recarregamento dos dados
         carregar_dados_frequencia.clear()
@@ -351,7 +360,7 @@ def design_login():
     """Define o layout da interface de login."""
     col1, col2 = st.columns(2)
     with col1:
-        st.sidebar.image("data/dema.jpg", width=100)
+        st.sidebar.image(os.path.join(DATA_DIR, "dema.jpg"), width=100)
     with col2:
         st.sidebar.header('📊 Frequência do Momento Áureo')
     st.sidebar.markdown("---")
@@ -819,11 +828,11 @@ def livros():
     st.markdown("### Lista de Livros para Estudo")
     
     # Criar diretório data se não existir
-    if not os.path.exists('data'):
-        os.makedirs('data')
+    if not os.path.exists(DATA_DIR):
+        os.makedirs(DATA_DIR)
     
     # Criar arquivo Excel se não existir
-    arquivo_livros = 'data/livros.xlsx'
+    arquivo_livros = os.path.join(DATA_DIR, 'livros.xlsx')
     if not os.path.exists(arquivo_livros):
         df_inicial = pd.DataFrame(columns=['Nome do livro', 'Autor', 'Ano', 'Capa'])
         df_inicial.to_excel(arquivo_livros, index=False)
@@ -852,12 +861,12 @@ def livros():
                     imagem_path = ''
                     if livro_capa is not None:
                         # Criar diretório para imagens se não existir
-                        img_dir = 'data/capas'
+                        img_dir = os.path.join(DATA_DIR, 'capas')
                         if not os.path.exists(img_dir):
                             os.makedirs(img_dir)
                         
                         # Salvar imagem
-                        imagem_path = f"{img_dir}/{livro_capa.name}"
+                        imagem_path = os.path.join(img_dir, livro_capa.name)
                         with open(imagem_path, "wb") as f:
                             f.write(livro_capa.getbuffer())
                 
