@@ -140,7 +140,7 @@ def create_monthly_percentage_chart(df_subset, momento_label):
             x=monthly_stats.index,
             y=monthly_stats['Frequência'],
             marker_color='#2E8B57',  # Verde
-            text=[f'<b>{val}%</b>' for val in monthly_stats['Frequência']],
+            text=[f'{val:.1f}%' for val in monthly_stats['Frequência']],
             textposition='auto',
             hovertemplate='Mês/Ano: %{x}<br>Presença: %{y:.1f}%<extra></extra>'
         ))
@@ -151,7 +151,7 @@ def create_monthly_percentage_chart(df_subset, momento_label):
             x=monthly_stats.index,
             y=monthly_stats['Ausência'],
             marker_color='#FF4B4B',  # Vermelho
-            text=[f'<b>{val}%</b>' for val in monthly_stats['Ausência']],
+            text=[f'{val:.1f}%' for val in monthly_stats['Ausência']],
             textposition='auto',
             hovertemplate='Mês/Ano: %{x}<br>Ausência: %{y:.1f}%<extra></extra>'
         ))
@@ -168,7 +168,7 @@ def create_monthly_percentage_chart(df_subset, momento_label):
                 tickfont=dict(family="Arial", size=12),
                 tickangle=90,  # Texto na vertical
                 tickmode='array',
-                ticktext=[f'<b>{x}</b>' for x in monthly_stats.index],
+                ticktext=[f'{x}' for x in monthly_stats.index],
                 tickvals=monthly_stats.index
             ),
             yaxis=dict(
@@ -235,7 +235,7 @@ def plot_presence_type_distribution(df_subset, momento_label):
         fig.add_trace(go.Bar(
             x=ordem_tipos,
             y=presence_percentages,
-            text=[f'<b>{val}%</b>' for val in presence_percentages],
+            text=[f'{val:.1f}%' for val in presence_percentages],
             textposition='auto',
             marker_color=colors,
             hovertemplate='%{x}<br>Percentual: %{y:.1f}%<br>Quantidade: %{customdata} registros<extra></extra>',
@@ -251,9 +251,9 @@ def plot_presence_type_distribution(df_subset, momento_label):
             xaxis=dict(
                 title="",
                 ticktext=[
-                    f'<span style="color: {color_map["Presencial"]}"><b>Presencial</b></span>',
-                    f'<span style="color: {color_map["Online"]}"><b>Online</b></span>',
-                    f'<span style="color: {color_map["Ausente"]}"><b>Ausente</b></span>'
+                    f'<span style="color: {color_map["Presencial"]}">{ordem_tipos[0]}</span>',
+                    f'<span style="color: {color_map["Online"]}">{ordem_tipos[1]}</span>',
+                    f'<span style="color: {color_map["Ausente"]}">{ordem_tipos[2]}</span>'
                 ],
                 tickvals=ordem_tipos,
                 tickfont=dict(family="Arial", size=12),
@@ -323,7 +323,7 @@ def create_pie_chart(df_subset, momento_label):
             values=tipo_presenca_counts.values,
             hole=0.4,
             marker_colors=colors,
-            text=[f'<b>{val:.1f}%</b>' for val in tipo_presenca_percentual],
+            text=[f'{val:.1f}%' for val in tipo_presenca_percentual],
             textposition='auto',
             hovertemplate='%{customdata}<extra></extra>',
             customdata=hover_text,
