@@ -123,7 +123,7 @@ def create_monthly_percentage_chart(df_subset, momento_label):
         # Calcular percentuais por mês
         monthly_stats = df.groupby('Mês/Ano').agg({
             'Frequência': lambda x: (x == 'Presente').mean() * 100
-        }).round(1)
+        }).round(2)  # Arredondando para 2 casas decimais
         
         # Ordenar os meses
         monthly_stats = monthly_stats.reindex(sorted(monthly_stats.index))
@@ -140,9 +140,10 @@ def create_monthly_percentage_chart(df_subset, momento_label):
             x=monthly_stats.index,
             y=monthly_stats['Frequência'],
             marker_color='#2E8B57',  # Verde
-            text=[f'{val:.1f}%' for val in monthly_stats['Frequência']],
+            text=[f'<b>{val:.2f}%</b>' for val in monthly_stats['Frequência']],  # 2 casas decimais
             textposition='auto',
-            hovertemplate='Mês/Ano: %{x}<br>Presença: %{y:.1f}%<extra></extra>'
+            textfont=dict(family="Arial Black", color="white"),  # Fonte em negrito e branca
+            hovertemplate='Mês/Ano: %{x}<br>Presença: %{y:.2f}%<extra></extra>'
         ))
         
         # Adicionar barra de ausência
@@ -151,40 +152,41 @@ def create_monthly_percentage_chart(df_subset, momento_label):
             x=monthly_stats.index,
             y=monthly_stats['Ausência'],
             marker_color='#FF4B4B',  # Vermelho
-            text=[f'{val:.1f}%' for val in monthly_stats['Ausência']],
+            text=[f'<b>{val:.2f}%</b>' for val in monthly_stats['Ausência']],  # 2 casas decimais
             textposition='auto',
-            hovertemplate='Mês/Ano: %{x}<br>Ausência: %{y:.1f}%<extra></extra>'
+            textfont=dict(family="Arial Black", color="white"),  # Fonte em negrito e branca
+            hovertemplate='Mês/Ano: %{x}<br>Ausência: %{y:.2f}%<extra></extra>'
         ))
         
         # Atualizar layout
         fig.update_layout(
             title=dict(
                 text=f'Percentual de Frequência por Mês - {momento_label}',
-                font=dict(size=20, family="Arial Black")
+                font=dict(size=20, family="Arial Black", color="white")
             ),
             barmode='stack',
             xaxis=dict(
                 title="",
-                tickfont=dict(family="Arial", size=12),
-                tickangle=90,  # Texto na vertical
+                tickfont=dict(family="Arial Black", size=12, color="white"),
+                tickangle=0,  # Texto horizontal
                 tickmode='array',
-                ticktext=[f'{x}' for x in monthly_stats.index],
+                ticktext=[f'<b>{x}</b>' for x in monthly_stats.index],
                 tickvals=monthly_stats.index
             ),
             yaxis=dict(
                 title=dict(
                     text="Percentual (%)",
-                    font=dict(size=14, family="Arial")
+                    font=dict(size=14, family="Arial Black", color="white")
                 ),
-                tickfont=dict(family="Arial", size=12),
-                tickformat='.1f',
+                tickfont=dict(family="Arial Black", size=12, color="white"),
+                tickformat='.2f',  # 2 casas decimais
                 ticksuffix='%',
                 range=[0, 100]
             ),
-            font=dict(family="Arial", size=12),
+            font=dict(family="Arial Black", size=12, color="white"),
             height=400,
-            plot_bgcolor='#F5F5DC',  # Fundo bege
-            paper_bgcolor='white',
+            plot_bgcolor='#0E1117',  # Fundo escuro
+            paper_bgcolor='#0E1117',  # Fundo escuro
             bargap=0.2,
             showlegend=True,
             legend=dict(
@@ -192,7 +194,8 @@ def create_monthly_percentage_chart(df_subset, momento_label):
                 yanchor="bottom",
                 y=1.02,
                 xanchor="right",
-                x=1
+                x=1,
+                font=dict(family="Arial Black", color="white")
             )
         )
         
@@ -216,7 +219,7 @@ def plot_presence_type_distribution(df_subset, momento_label):
         # Calcular a contagem e percentual de cada tipo de presença
         presence_counts = df['Tipo de presença'].value_counts().reindex(ordem_tipos).fillna(0)
         total = presence_counts.sum()
-        presence_percentages = (presence_counts / total * 100).round(1)
+        presence_percentages = (presence_counts / total * 100).round(2)  # Arredondando para 2 casas decimais
         
         # Definir cores para cada tipo de presença
         color_map = {
@@ -235,10 +238,11 @@ def plot_presence_type_distribution(df_subset, momento_label):
         fig.add_trace(go.Bar(
             x=ordem_tipos,
             y=presence_percentages,
-            text=[f'{val:.1f}%' for val in presence_percentages],
+            text=[f'<b>{val:.2f}%</b>' for val in presence_percentages],  # 2 casas decimais
             textposition='auto',
+            textfont=dict(family="Arial Black", color="white"),  # Fonte em negrito e branca
             marker_color=colors,
-            hovertemplate='%{x}<br>Percentual: %{y:.1f}%<br>Quantidade: %{customdata} registros<extra></extra>',
+            hovertemplate='%{x}<br>Percentual: %{y:.2f}%<br>Quantidade: %{customdata} registros<extra></extra>',
             customdata=presence_counts.values,
             showlegend=False
         ))
@@ -246,32 +250,32 @@ def plot_presence_type_distribution(df_subset, momento_label):
         fig.update_layout(
             title=dict(
                 text=f'Distribuição de Tipo de Presença - {momento_label}',
-                font=dict(size=20, family="Arial Black")
+                font=dict(size=20, family="Arial Black", color="white")
             ),
             xaxis=dict(
                 title="",
                 ticktext=[
-                    f'<span style="color: {color_map["Presencial"]}">{ordem_tipos[0]}</span>',
-                    f'<span style="color: {color_map["Online"]}">{ordem_tipos[1]}</span>',
-                    f'<span style="color: {color_map["Ausente"]}">{ordem_tipos[2]}</span>'
+                    f'<span style="color: white"><b>{ordem_tipos[0]}</b></span>',
+                    f'<span style="color: white"><b>{ordem_tipos[1]}</b></span>',
+                    f'<span style="color: white"><b>{ordem_tipos[2]}</b></span>'
                 ],
                 tickvals=ordem_tipos,
-                tickfont=dict(family="Arial", size=12),
-                tickangle=90  # Texto na vertical
+                tickfont=dict(family="Arial Black", size=12, color="white"),
+                tickangle=0  # Texto horizontal
             ),
             yaxis=dict(
                 title=dict(
                     text="Percentual (%)",
-                    font=dict(size=14, family="Arial")
+                    font=dict(size=14, family="Arial Black", color="white")
                 ),
-                tickfont=dict(family="Arial", size=12),
-                tickformat='.1f',
+                tickfont=dict(family="Arial Black", size=12, color="white"),
+                tickformat='.2f',  # 2 casas decimais
                 ticksuffix='%'
             ),
-            font=dict(family="Arial", size=12),
+            font=dict(family="Arial Black", size=12, color="white"),
             height=400,
-            plot_bgcolor='#F5F5DC',  # Fundo bege
-            paper_bgcolor='white',
+            plot_bgcolor='#0E1117',  # Fundo escuro
+            paper_bgcolor='#0E1117',  # Fundo escuro
             bargap=0.2,
             margin=dict(t=100, b=50)  # Ajustar margens
         )
@@ -293,7 +297,7 @@ def create_pie_chart(df_subset, momento_label):
         # Calcular contagem por tipo de presença
         tipo_presenca_counts = df['Tipo de presença'].value_counts()
         total = tipo_presenca_counts.sum()
-        tipo_presenca_percentual = (tipo_presenca_counts / total * 100).round(1)
+        tipo_presenca_percentual = (tipo_presenca_counts / total * 100).round(2)  # Arredondando para 2 casas decimais
         
         # Definir cores para cada tipo de presença
         color_map = {
@@ -307,7 +311,7 @@ def create_pie_chart(df_subset, momento_label):
         
         # Criar texto personalizado para o hover
         hover_text = [
-            f'{tipo}<br>Percentual: {pct:.1f}%<br>Quantidade: {count} registros'
+            f'{tipo}<br>Percentual: {pct:.2f}%<br>Quantidade: {count} registros'
             for tipo, pct, count in zip(
                 tipo_presenca_counts.index,
                 tipo_presenca_percentual,
@@ -323,30 +327,31 @@ def create_pie_chart(df_subset, momento_label):
             values=tipo_presenca_counts.values,
             hole=0.4,
             marker_colors=colors,
-            text=[f'{val:.1f}%' for val in tipo_presenca_percentual],
+            text=[f'<b>{val:.2f}%</b>' for val in tipo_presenca_percentual],  # 2 casas decimais
             textposition='auto',
             hovertemplate='%{customdata}<extra></extra>',
             customdata=hover_text,
-            textangle=90  # Texto na vertical
+            textangle=0  # Texto horizontal
         ))
         
         # Atualizar layout
         fig.update_layout(
             title=dict(
                 text=f'Distribuição de Tipo de Presença - {momento_label}',
-                font=dict(size=20, family="Arial Black")
+                font=dict(size=20, family="Arial Black", color="white")
             ),
-            font=dict(family="Arial", size=12),
+            font=dict(family="Arial Black", size=12, color="white"),
             height=400,
-            plot_bgcolor='#F5F5DC',  # Fundo bege
-            paper_bgcolor='white',
+            plot_bgcolor='#0E1117',  # Fundo escuro
+            paper_bgcolor='#0E1117',  # Fundo escuro
             showlegend=True,
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
                 xanchor="right",
-                x=1
+                x=1,
+                font=dict(family="Arial Black", color="white")
             )
         )
         
