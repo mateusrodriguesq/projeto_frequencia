@@ -105,6 +105,20 @@ def salvar_frequencia(data_registro, momento, df_freq):
     except Exception as e:
         st.error(f"Erro ao salvar frequência: {str(e)}")
 
+def format_month_year(date_str):
+    """
+    Converte o formato de data MM/YYYY para MMM/YYYY
+    Exemplo: 01/2024 -> Jan/2024
+    """
+    month_map = {
+        '01': 'Jan', '02': 'Fev', '03': 'Mar', '04': 'Abr',
+        '05': 'Mai', '06': 'Jun', '07': 'Jul', '08': 'Ago',
+        '09': 'Set', '10': 'Out', '11': 'Nov', '12': 'Dez'
+    }
+    
+    month, year = date_str.split('/')
+    return f'{month_map[month]}/{year}'
+
 def create_monthly_percentage_chart(df_subset, momento_label):
     """
     Cria um gráfico de barras empilhadas mostrando o percentual de frequência por mês.
@@ -118,15 +132,24 @@ def create_monthly_percentage_chart(df_subset, momento_label):
             df['Data'] = pd.to_datetime(df['Data'])
         
         # Criar coluna de Mês/Ano
-        df['Mês/Ano'] = df['Data'].dt.strftime('%m/%Y')
+        df['Mês/Ano'] = df['Data'].dt.strftime('%m/%Y').apply(format_month_year)
         
         # Calcular percentuais por mês
         monthly_stats = df.groupby('Mês/Ano').agg({
             'Frequência': lambda x: (x == 'Presente').mean() * 100
         }).round(2)  # Arredondando para 2 casas decimais
         
-        # Ordenar os meses
-        monthly_stats = monthly_stats.reindex(sorted(monthly_stats.index))
+        # Ordenar os meses corretamente
+        month_order = {
+            'Jan': 1, 'Fev': 2, 'Mar': 3, 'Abr': 4,
+            'Mai': 5, 'Jun': 6, 'Jul': 7, 'Ago': 8,
+            'Set': 9, 'Out': 10, 'Nov': 11, 'Dez': 12
+        }
+        
+        # Criar uma chave de ordenação temporária
+        monthly_stats['sort_key'] = monthly_stats.index.map(lambda x: f"{month_order[x.split('/')[0]]:02d}-{x.split('/')[1]}")
+        monthly_stats = monthly_stats.sort_values('sort_key')
+        monthly_stats = monthly_stats.drop('sort_key', axis=1)
         
         # Calcular percentual de ausência
         monthly_stats['Ausência'] = 100 - monthly_stats['Frequência']
