@@ -1,0 +1,38 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPep8Inspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N801" />
+          <option value="N806" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="conexao_dw.conexao.user" />
+          <option value="import_views.imported_views.vw_qualidade_cliente" />
+          <option value="tuple.vw_qualidade_cliente" />
+          <option value="schemas.dw_hom.table_names" />
+          <option value="schemas.stg_hom.table_names" />
+          <option value="schemas.stg_hom.execute" />
+          <option value="schemas.dw_hom.execute" />
+          <option value="bool.any" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
+      <scope name="Open Files" level="TYPO" enabled="false">
+        <option name="processCode" value="true" />
+        <option name="processLiterals" value="true" />
+        <option name="processComments" value="true" />
+      </scope>
+      <option name="processCode" value="true" />
+      <option name="processLiterals" value="true" />
+      <option name="processComments" value="true" />
+    </inspection_tool>
+  </profile>
+</component>
